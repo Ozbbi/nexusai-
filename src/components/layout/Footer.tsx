@@ -83,7 +83,7 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-white/40">
-            &copy; 2025 NexusAI. All rights reserved.
+            &copy; 2026 NexusAI. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             <input
