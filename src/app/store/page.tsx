@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
 import { mockProducts, categories } from "@/lib/mock-data";
 
@@ -60,12 +60,16 @@ export default function StorePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
+          className="text-center mb-12"
         >
-          <h1 className="text-4xl font-heading font-bold text-[#0f172a] mb-4">
+          <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+            <Sparkles className="w-3.5 h-3.5" />
+            500+ AI tools available
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-heading font-bold text-[#0f172a] mb-4">
             AI Store
           </h1>
-          <p className="text-lg text-[#475569]">
+          <p className="text-lg text-[#64748b] max-w-lg mx-auto">
             Discover the best AI tools built by creators worldwide
           </p>
         </motion.div>
@@ -75,17 +79,25 @@ export default function StorePage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="max-w-2xl mx-auto mb-8"
+          className="max-w-2xl mx-auto mb-10"
         >
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#94a3b8]" />
+          <div className="relative group">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#94a3b8] group-focus-within:text-indigo-500 transition-colors" />
             <input
               type="text"
-              placeholder="Search 500+ AI tools..."
+              placeholder="Search AI tools, models, agents..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-200 bg-white text-[#0f172a] placeholder:text-[#94a3b8] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-base shadow-sm"
+              className="w-full pl-14 pr-12 py-4 rounded-2xl border-2 border-gray-200 bg-white text-[#0f172a] placeholder:text-[#94a3b8] focus:outline-none focus:border-indigo-500 focus:shadow-lg focus:shadow-indigo-500/10 text-base transition-all"
             />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              >
+                <X className="w-3.5 h-3.5 text-gray-500" />
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -95,10 +107,10 @@ export default function StorePage() {
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+              className={`px-5 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
                 category === cat
-                  ? "bg-primary text-white"
-                  : "bg-white text-[#475569] border border-gray-200 hover:border-primary hover:text-primary"
+                  ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/20"
+                  : "bg-white text-[#475569] border border-gray-200 hover:border-indigo-200 hover:text-indigo-600 hover:bg-indigo-50/50"
               }`}
             >
               {cat}
@@ -109,31 +121,34 @@ export default function StorePage() {
         {/* Filters row */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 text-[#475569] focus:outline-none focus:ring-2 focus:ring-primary/20"
-            >
-              <option value="popular">Popular</option>
-              <option value="newest">Newest</option>
-              <option value="price-low">Price: Low → High</option>
-              <option value="price-high">Price: High → Low</option>
-              <option value="top-rated">Top Rated</option>
-            </select>
+            <div className="relative">
+              <SlidersHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94a3b8]" />
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="text-sm bg-white border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-[#475569] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 appearance-none cursor-pointer"
+              >
+                <option value="popular">Most Popular</option>
+                <option value="newest">Newest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="top-rated">Top Rated</option>
+              </select>
+            </div>
 
             <button
               onClick={() => setFreeOnly(!freeOnly)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 freeOnly
-                  ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                  : "bg-white text-[#475569] border border-gray-200 hover:border-emerald-300"
+                  ? "bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm"
+                  : "bg-white text-[#475569] border border-gray-200 hover:border-emerald-300 hover:text-emerald-600"
               }`}
             >
-              FREE
+              Free Only
             </button>
           </div>
 
-          <span className="text-sm text-[#94a3b8]">
+          <span className="text-sm text-[#94a3b8] font-medium">
             {filtered.length} result{filtered.length !== 1 ? "s" : ""}
           </span>
         </div>
@@ -146,13 +161,23 @@ export default function StorePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-24"
+          >
+            <div className="w-20 h-20 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-5">
               <Search className="w-8 h-8 text-[#94a3b8]" />
             </div>
-            <h3 className="text-lg font-heading font-bold text-[#0f172a] mb-2">No results found</h3>
-            <p className="text-sm text-[#475569]">Try adjusting your search or filters</p>
-          </div>
+            <h3 className="text-xl font-heading font-bold text-[#0f172a] mb-2">No results found</h3>
+            <p className="text-sm text-[#64748b] mb-6">Try adjusting your search or filters</p>
+            <button
+              onClick={() => { setSearch(""); setCategory("All"); setFreeOnly(false); }}
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-700 border border-indigo-200 px-5 py-2 rounded-xl hover:bg-indigo-50 transition-all"
+            >
+              Clear all filters
+            </button>
+          </motion.div>
         )}
       </div>
     </div>
