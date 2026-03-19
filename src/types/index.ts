@@ -18,6 +18,7 @@ export interface Product {
   websocket_support: boolean;
   version: string;
   license: string;
+  download_url: string;
   status: "draft" | "review" | "published" | "rejected";
   features: string[];
   created_at: string;

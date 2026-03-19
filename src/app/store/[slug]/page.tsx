@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -19,18 +19,40 @@ import {
   Copy,
   Check,
 } from "lucide-react";
-import { mockProducts, creatorNames, mockReviews } from "@/lib/mock-data";
+import { getProductBySlug, getProductReviews } from "@/lib/supabase";
 import { formatNumber, formatPrice, getTimeAgo } from "@/lib/utils";
+import { Product, Review } from "@/types";
 import toast from "react-hot-toast";
 
 const tabs = ["Overview", "Documentation", "Reviews", "Changelog"];
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [activeTab, setActiveTab] = useState("Overview");
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const product = mockProducts.find((p) => p.slug === slug);
+  useEffect(() => {
+    if (!slug) return;
+    getProductBySlug(slug as string)
+      .then((data) => {
+        setProduct(data);
+        return getProductReviews(data.id);
+      })
+      .then((revs) => setReviews(revs || []))
+      .catch(() => setProduct(null))
+      .finally(() => setLoading(false));
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="pt-32 pb-20 text-center min-h-screen">
+        <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -42,6 +64,8 @@ export default function ProductDetailPage() {
       </div>
     );
   }
+
+  const creatorName = product.creator?.full_name || "Unknown Creator";
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -55,11 +79,7 @@ export default function ProductDetailPage() {
   };
 
   const handleInstall = () => {
-    if (product.price === 0) {
-      toast.success(`${product.name} installed successfully!`);
-    } else {
-      toast.success(`Redirecting to checkout for ${product.name}...`);
-    }
+    toast("Payment integration coming soon! 🚧", { icon: "🔒" });
   };
 
   return (
@@ -97,7 +117,7 @@ export default function ProductDetailPage() {
                 <span className="flex items-center gap-1 text-white">
                   <Star className="w-4 h-4 fill-white" />
                   <strong>{product.rating}</strong>
-                  <span className="text-white/60">({mockReviews.length} reviews)</span>
+                  <span className="text-white/60">({reviews.length} reviews)</span>
                 </span>
                 <span className="flex items-center gap-1 text-white/70">
                   <Download className="w-4 h-4" /> {formatNumber(product.download_count)} downloads
@@ -105,7 +125,7 @@ export default function ProductDetailPage() {
                 <span className="text-white/60 text-sm">
                   by{" "}
                   <span className="text-white font-medium">
-                    {creatorNames[product.creator_id]}
+                    {creatorName}
                   </span>
                 </span>
               </div>
@@ -115,7 +135,7 @@ export default function ProductDetailPage() {
                 onClick={handleInstall}
                 className="bg-white text-[#0f172a] font-bold px-8 py-3 rounded-xl hover:bg-white/90 transition-all hover:scale-[1.02] active:scale-[0.98] text-base shadow-lg"
               >
-                {product.price === 0 ? "Install Free" : `Buy ${formatPrice(product.price)}`}
+                {`Buy — ${formatPrice(product.price)}`}
               </button>
               <button
                 onClick={handleWishlist}
@@ -229,12 +249,12 @@ export default function ProductDetailPage() {
                     <div className="flex items-center gap-2">
                       <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
                       <span className="font-bold text-[#0f172a]">{product.rating}</span>
-                      <span className="text-sm text-[#94a3b8]">({mockReviews.length} reviews)</span>
+                      <span className="text-sm text-[#94a3b8]">({reviews.length} reviews)</span>
                     </div>
                   </div>
 
                   <div className="space-y-6">
-                    {mockReviews.map((review) => (
+                    {reviews.map((review) => (
                       <div key={review.id} className="border-b border-gray-100 pb-6 last:border-0">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
@@ -306,12 +326,12 @@ export default function ProductDetailPage() {
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent-purple/20 flex items-center justify-center">
                   <span className="font-bold text-primary">
-                    {(creatorNames[product.creator_id] || "U").charAt(0)}
+                    {(creatorName || "U").charAt(0)}
                   </span>
                 </div>
                 <div>
                   <div className="font-heading font-bold text-[#0f172a]">
-                    {creatorNames[product.creator_id]}
+                    {creatorName}
                   </div>
                   <div className="text-xs text-[#94a3b8]">Creator</div>
                 </div>

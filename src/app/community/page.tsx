@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MessageSquare, ThumbsUp, Pin, Plus } from "lucide-react";
 import Link from "next/link";
-import { mockPosts } from "@/lib/mock-data";
+import { getPosts } from "@/lib/supabase";
 import { getTimeAgo } from "@/lib/utils";
+import { Post } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
 
 const categoryTabs = ["All", "General", "Tips & Tricks", "Showcase", "Help", "Feature Requests"];
 
@@ -18,11 +20,19 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function CommunityPage() {
+  const { user } = useAuth();
+  const [posts, setPosts] = useState<Post[]>([]);
   const [activeTab, setActiveTab] = useState("All");
 
+  useEffect(() => {
+    getPosts()
+      .then((data) => setPosts(data || []))
+      .catch(() => setPosts([]));
+  }, []);
+
   const filtered = activeTab === "All"
-    ? mockPosts
-    : mockPosts.filter((p) => p.category === activeTab.toLowerCase().replace(/ & /g, "").replace(/ /g, "-"));
+    ? posts
+    : posts.filter((p) => p.category === activeTab.toLowerCase().replace(/ & /g, "").replace(/ /g, "-"));
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
@@ -37,7 +47,7 @@ export default function CommunityPage() {
             <p className="text-[#475569]">Connect with AI creators and enthusiasts</p>
           </div>
           <Link
-            href="/login"
+            href={user ? "/community" : "/login"}
             className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-all"
           >
             <Plus className="w-4 h-4" /> New Post
@@ -63,7 +73,7 @@ export default function CommunityPage() {
 
         {/* Posts */}
         <div className="space-y-3">
-          {(activeTab === "All" ? mockPosts : filtered.length > 0 ? filtered : mockPosts).map((post, i) => (
+          {filtered.map((post, i) => (
             <motion.div
               key={post.id}
               initial={{ opacity: 0, y: 10 }}

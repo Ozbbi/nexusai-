@@ -5,7 +5,6 @@ import { Star, Download, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Product } from "@/types";
 import { formatNumber, formatPrice } from "@/lib/utils";
-import { creatorNames } from "@/lib/mock-data";
 
 export default function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   return (
@@ -44,7 +43,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product; 
               {product.name}
             </h3>
             <p className="text-xs text-[#94a3b8] mb-3">
-              by {creatorNames[product.creator_id] || "Unknown Creator"}
+              by {product.creator?.full_name || "Unknown Creator"}
             </p>
 
             <div className="flex flex-wrap gap-1.5 mb-4">
@@ -69,13 +68,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product; 
                   {formatNumber(product.download_count)}
                 </span>
               </div>
-              <span
-                className={`text-sm font-bold ${
-                  product.price === 0
-                    ? "text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full text-xs"
-                    : "text-[#0f172a]"
-                }`}
-              >
+              <span className="text-sm font-bold text-[#0f172a]">
                 {formatPrice(product.price)}
               </span>
             </div>

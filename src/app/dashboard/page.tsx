@@ -1,13 +1,24 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Brain, Zap, Key, Store } from "lucide-react";
-import { mockProducts } from "@/lib/mock-data";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserPurchases } from "@/lib/supabase";
+import { Product } from "@/types";
 import toast from "react-hot-toast";
 
 export default function DashboardLibrary() {
-  const installed = mockProducts.slice(0, 3);
+  const { user } = useAuth();
+  const [installed, setInstalled] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (!user) return;
+    getUserPurchases(user.id)
+      .then((data) => setInstalled(data?.map((p: { product: Product }) => p.product).filter(Boolean) || []))
+      .catch(() => setInstalled([]));
+  }, [user]);
 
   return (
     <div>

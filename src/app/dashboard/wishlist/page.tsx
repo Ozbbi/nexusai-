@@ -1,14 +1,31 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Heart, Brain, Star, Trash2 } from "lucide-react";
-import { mockProducts } from "@/lib/mock-data";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserWishlist, supabase } from "@/lib/supabase";
+import { Product } from "@/types";
 import { formatPrice, formatNumber } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 export default function WishlistPage() {
-  const wishlisted = mockProducts.slice(2, 6);
+  const { user } = useAuth();
+  const [wishlisted, setWishlisted] = useState<{ id: string; product: Product }[]>([]);
+
+  useEffect(() => {
+    if (!user) return;
+    getUserWishlist(user.id)
+      .then((data) => setWishlisted(data || []))
+      .catch(() => setWishlisted([]));
+  }, [user]);
+
+  const removeFromWishlist = async (wishlistId: string, productName: string) => {
+    await supabase.from("wishlists").delete().eq("id", wishlistId);
+    setWishlisted((prev) => prev.filter((w) => w.id !== wishlistId));
+    toast.success(`Removed ${productName} from wishlist`);
+  };
 
   return (
     <div>
@@ -16,36 +33,36 @@ export default function WishlistPage() {
 
       {wishlisted.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {wishlisted.map((product, i) => (
+          {wishlisted.map((item, i) => (
             <motion.div
-              key={product.id}
+              key={item.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               className="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden group hover:border-white/[0.1] transition-all"
             >
-              <div className={`h-20 bg-gradient-to-br ${product.gradient} flex items-center justify-center relative`}>
+              <div className={`h-20 bg-gradient-to-br ${item.product.gradient} flex items-center justify-center relative`}>
                 <Brain className="w-8 h-8 text-white/80" />
                 <button
-                  onClick={() => toast.success(`Removed ${product.name} from wishlist`)}
+                  onClick={() => removeFromWishlist(item.id, item.product.name)}
                   className="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-black/40 transition-all"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
               <div className="p-4">
-                <h3 className="font-heading font-bold text-white text-sm mb-1">{product.name}</h3>
+                <h3 className="font-heading font-bold text-white text-sm mb-1">{item.product.name}</h3>
                 <div className="flex items-center justify-between mb-3">
                   <span className="flex items-center gap-1 text-xs text-white/40">
                     <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                    {product.rating} ({formatNumber(product.download_count)})
+                    {item.product.rating} ({formatNumber(item.product.download_count)})
                   </span>
-                  <span className={`text-xs font-bold ${product.price === 0 ? "text-emerald-400" : "text-white"}`}>
-                    {formatPrice(product.price)}
+                  <span className={`text-xs font-bold ${item.product.price === 0 ? "text-emerald-400" : "text-white"}`}>
+                    {formatPrice(item.product.price)}
                   </span>
                 </div>
                 <Link
-                  href={`/store/${product.slug}`}
+                  href={`/store/${item.product.slug}`}
                   className="block text-center text-xs font-medium bg-primary/10 hover:bg-primary/20 text-primary py-2 rounded-lg transition-all"
                 >
                   View Product

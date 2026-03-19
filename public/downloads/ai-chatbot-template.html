@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Template by NexusAI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 480px;
+            height: 680px;
+            background: #ffffff;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header .avatar {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .chat-header .info h2 {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .chat-header .info p {
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.bot {
+            background: #ffffff;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message .time {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-indicator.active { display: flex; gap: 4px; align-items: center; }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: typing 1.4s ease-in-out infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .chat-input {
+            padding: 16px 20px;
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input input:focus { border-color: #7c3aed; }
+
+        .chat-input button {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .chat-input button:hover { opacity: 0.9; }
+        .chat-input button:active { transform: scale(0.95); }
+
+        .quick-replies {
+            padding: 0 20px 12px;
+            background: #f8fafc;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-reply {
+            padding: 6px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            background: #fff;
+            font-size: 12px;
+            color: #7c3aed;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-reply:hover {
+            background: #7c3aed;
+            color: white;
+            border-color: #7c3aed;
+        }
+
+        .powered-by {
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .powered-by a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="avatar">🤖</div>
+                <div class="info">
+                    <h2>NexusAI Assistant</h2>
+                    <p><span class="status-dot"></span>Online • Ready to help</p>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    👋 Hi there! I'm the NexusAI Assistant. I can help you with:
+                    <br><br>
+                    • General questions & info<br>
+                    • Code & tech support<br>
+                    • Creative writing help<br>
+                    • Data analysis tips
+                    <div class="time">Just now</div>
+                </div>
+            </div>
+
+            <div class="quick-replies" id="quickReplies">
+                <div class="quick-reply" onclick="sendQuickReply('What can you do?')">What can you do?</div>
+                <div class="quick-reply" onclick="sendQuickReply('Help me write code')">Help me code</div>
+                <div class="quick-reply" onclick="sendQuickReply('Tell me a fun fact')">Fun fact</div>
+                <div class="quick-reply" onclick="sendQuickReply('How does AI work?')">How does AI work?</div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your message..."
+                       onkeypress="if(event.key==='Enter')sendMessage()">
+                <button onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+        <div class="powered-by">
+            Powered by <a href="https://nexusai.vercel.app" target="_blank">NexusAI</a> • Free Template
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // NexusAI Chatbot Template - Configuration
+        // ============================================================
+
+        const CONFIG = {
+            botName: "NexusAI Assistant",
+            typingDelay: 800,      // ms before bot starts "typing"
+            responseDelay: 1500,   // ms for typing animation
+
+            // -------------------------------------------------------
+            // CONNECT YOUR AI API HERE
+            // Replace the getAIResponse function with your API call
+            // -------------------------------------------------------
+            useAPI: false,
+            apiEndpoint: "https://api.example.com/chat",
+            apiKey: "YOUR_API_KEY_HERE",
+        };
+
+        // ============================================================
+        // Built-in responses (used when useAPI is false)
+        // Replace with your AI API for real responses
+        // ============================================================
+
+        const RESPONSES = {
+            greetings: {
+                patterns: ["hello", "hi", "hey", "good morning", "good evening", "howdy", "greetings"],
+                responses: [
+                    "Hello! 👋 How can I help you today?",
+                    "Hey there! Great to see you. What can I do for you?",
+                    "Hi! I'm ready to assist. What's on your mind?",
+                ]
+            },
+            capabilities: {
+                patterns: ["what can you do", "help", "capabilities", "features", "what do you do"],
+                responses: [
+                    "I can help with lots of things! 🚀\n\n• Answer questions on various topics\n• Help with coding & debugging\n• Assist with writing & editing\n• Provide creative suggestions\n• Explain complex concepts\n\nJust ask me anything!",
+                ]
+            },
+            coding: {
+                patterns: ["code", "programming", "javascript", "python", "debug", "function", "api"],
+                responses: [
+                    "I'd love to help with code! 💻\n\nHere's a quick tip:\n\n```js\n// Clean way to handle async\nconst fetchData = async (url) => {\n  try {\n    const res = await fetch(url);\n    return await res.json();\n  } catch (err) {\n    console.error('Error:', err);\n  }\n};\n```\n\nWhat specific coding help do you need?",
+                ]
+            },
+            funfact: {
+                patterns: ["fun fact", "interesting", "tell me something", "did you know", "random"],
+                responses: [
+                    "🧠 Fun fact: The first AI program was written in 1951 by Christopher Strachey. It played checkers on a computer at the University of Manchester!",
+                    "🌟 Did you know? GPT-3 has 175 billion parameters - if each parameter were a grain of sand, they'd fill about 7 dump trucks!",
+                    "🤯 Fun fact: The term 'Artificial Intelligence' was first coined in 1956 at the Dartmouth Conference by John McCarthy!",
+                    "💡 Interesting: An AI can now write code, compose music, create art, and even generate scientific hypotheses. We're living in the future!",
+                ]
+            },
+            ai_explain: {
+                patterns: ["how does ai work", "machine learning", "neural network", "deep learning", "explain ai"],
+                responses: [
+                    "Great question! 🧠 Here's AI in a nutshell:\n\n1️⃣ **Data**: AI learns from huge amounts of data\n2️⃣ **Patterns**: It finds patterns humans might miss\n3️⃣ **Model**: These patterns form a 'model' of understanding\n4️⃣ **Prediction**: The model makes predictions on new data\n\nThink of it like teaching a child - show enough examples, and they learn to recognize things on their own!\n\nWant me to go deeper into any aspect?",
+                ]
+            },
+            thanks: {
+                patterns: ["thanks", "thank you", "thx", "appreciate", "helpful"],
+                responses: [
+                    "You're welcome! 😊 Happy to help. Anything else you'd like to know?",
+                    "Glad I could help! 🎉 Don't hesitate to ask if you need anything else.",
+                    "My pleasure! ✨ That's what I'm here for. Any other questions?",
+                ]
+            },
+            goodbye: {
+                patterns: ["bye", "goodbye", "see you", "later", "gotta go", "take care"],
+                responses: [
+                    "Goodbye! 👋 Have a wonderful day! Come back anytime.",
+                    "See you later! 🌟 It was great chatting with you!",
+                    "Take care! 😊 Remember, I'm always here when you need me.",
+                ]
+            },
+            default: [
+                "That's an interesting question! 🤔 While I'm a template bot with preset responses, you can connect me to a real AI API for intelligent conversations. Check the code comments for instructions!",
+                "I appreciate the question! As a demo bot, my responses are limited. To make me smarter, connect the OpenAI/Anthropic API - it's just a few lines of code! 🚀",
+                "Great topic! 💡 I'm currently running in demo mode. For real AI responses, update the `getAIResponse()` function in the source code with your preferred AI provider.",
+            ]
+        };
+
+        // ============================================================
+        // Core Chat Functions
+        // ============================================================
+
+        function getTime() {
+            return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function addMessage(text, sender = 'bot') {
+            const messagesEl = document.getElementById('chatMessages');
+            const msgEl = document.createElement('div');
+            msgEl.className = `message ${sender}`;
+
+            // Simple markdown-like formatting
+            let formatted = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre style="background:#f1f5f9;padding:8px;border-radius:8px;margin:8px 0;font-size:12px;overflow-x:auto"><code>$2</code></pre>')
+                .replace(/\n/g, '<br>');
+
+            msgEl.innerHTML = `${formatted}<div class="time">${getTime()}</div>`;
+            messagesEl.appendChild(msgEl);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function showTyping() {
+            const messagesEl = document.getElementById('chatMessages');
+            let indicator = document.getElementById('typingIndicator');
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'typingIndicator';
+                indicator.className = 'typing-indicator';
+                indicator.innerHTML = '<span></span><span></span><span></span>';
+                messagesEl.appendChild(indicator);
+            }
+            indicator.classList.add('active');
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function hideTyping() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.classList.remove('active');
+                indicator.remove();
+            }
+        }
+
+        // ============================================================
+        // AI Response Logic
+        // Replace this function to connect your own AI API
+        // ============================================================
+
+        async function getAIResponse(userMessage) {
+            // ---------------------------------------------------------
+            // OPTION 1: Use built-in pattern matching (default)
+            // ---------------------------------------------------------
+            if (!CONFIG.useAPI) {
+                const msg = userMessage.toLowerCase();
+
+                for (const [category, data] of Object.entries(RESPONSES)) {
+                    if (category === 'default') continue;
+                    if (data.patterns && data.patterns.some(p => msg.includes(p))) {
+                        const responses = data.responses;
+                        return responses[Math.floor(Math.random() * responses.length)];
+                    }
+                }
+
+                return RESPONSES.default[Math.floor(Math.random() * RESPONSES.default.length)];
+            }
+
+            // ---------------------------------------------------------
+            // OPTION 2: Connect to OpenAI API
+            // Set CONFIG.useAPI = true and add your API key
+            // ---------------------------------------------------------
+            try {
+                const response = await fetch(CONFIG.apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CONFIG.apiKey}`,
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4",
+                        messages: [
+                            { role: "system", content: "You are a helpful AI assistant." },
+                            { role: "user", content: userMessage }
+                        ],
+                        max_tokens: 500,
+                    }),
+                });
+
+                const data = await response.json();
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error('API Error:', error);
+                return "I'm having trouble connecting right now. Please try again in a moment! 🔄";
+            }
+        }
+
+        // ============================================================
+        // Message Sending
+        // ============================================================
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Hide quick replies after first message
+            document.getElementById('quickReplies').style.display = 'none';
+
+            // Add user message
+            addMessage(text, 'user');
+            input.value = '';
+
+            // Show typing indicator
+            setTimeout(() => showTyping(), CONFIG.typingDelay);
+
+            // Get and show bot response
+            const response = await getAIResponse(text);
+
+            setTimeout(() => {
+                hideTyping();
+                addMessage(response, 'bot');
+            }, CONFIG.typingDelay + CONFIG.responseDelay);
+        }
+
+        function sendQuickReply(text) {
+            document.getElementById('userInput').value = text;
+            sendMessage();
+        }
+
+        // Focus input on load
+        window.onload = () => document.getElementById('userInput').focus();
+    </script>
+</body>
+</html>

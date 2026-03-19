@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Brain, Eye, EyeOff, ArrowRight, Users, Sparkles, TrendingUp } from "lucide-react";
 import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { signUp } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "buyer" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -16,10 +18,17 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      toast.success("Account created successfully!");
-      router.push("/dashboard");
-    }, 1000);
+    const { error } = await signUp(form.email, form.password, {
+      full_name: form.name,
+      role: form.role,
+    });
+    if (error) {
+      toast.error(error.message || "Registration failed");
+      setLoading(false);
+    } else {
+      toast.success("Account created! Check your email to confirm.");
+      router.push("/login");
+    }
   };
 
   return (

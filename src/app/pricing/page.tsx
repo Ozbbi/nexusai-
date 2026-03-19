@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 
 const plans = [
@@ -62,12 +61,12 @@ const plans = [
 
 const faqs = [
   { q: "Can I switch plans anytime?", a: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and billing is prorated." },
-  { q: "What payment methods do you accept?", a: "We accept all major credit and debit cards through Stripe, including Visa, Mastercard, and American Express." },
+  { q: "What payment methods do you accept?", a: "Payment integration is coming soon. We will support local and international payment methods." },
   { q: "How does the commission work?", a: "Starter plan takes a 5% commission on each sale. Pro and Enterprise plans have 0% commission — you keep 100% of your earnings." },
   { q: "Can I publish for free?", a: "You need at least the Starter plan to publish AI products. Browsing and buying AI tools on the marketplace is always free for everyone." },
   { q: "What happens if I downgrade?", a: "Your published AI products stay live on the marketplace. However, you won't be able to publish new ones beyond your new plan's limit." },
   { q: "Do you offer annual pricing?", a: "Yes! Save 20% when you choose annual billing. Toggle the billing period above to see annual prices." },
-  { q: "How do payouts work?", a: "We process automatic weekly payouts via Stripe Connect directly to your bank account. No minimum threshold required." },
+  { q: "How do payouts work?", a: "Payout system is coming soon. Creators will receive earnings directly to their bank accounts." },
   { q: "Is there a free trial?", a: "Yes, the Pro plan comes with a 14-day free trial. No credit card required to start." },
 ];
 
@@ -158,18 +157,18 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Link
-                href="/register"
-                className={`block text-center py-3 rounded-xl font-medium text-sm transition-all ${
+              <button
+                disabled
+                className={`block w-full text-center py-3 rounded-xl font-medium text-sm cursor-not-allowed opacity-60 ${
                   plan.popular
-                    ? "bg-primary text-white hover:bg-primary-hover"
+                    ? "bg-primary text-white"
                     : plan.name === "Enterprise"
-                    ? "bg-[#0f172a] text-white hover:bg-[#1e293b]"
-                    : "border border-gray-200 text-[#475569] hover:border-primary hover:text-primary"
+                    ? "bg-[#0f172a] text-white"
+                    : "border border-gray-200 text-[#475569]"
                 }`}
               >
-                {plan.cta}
-              </Link>
+                Coming Soon
+              </button>
 
               {plan.popular && (
                 <p className="text-xs text-center text-[#94a3b8] mt-3">14-day free trial included</p>

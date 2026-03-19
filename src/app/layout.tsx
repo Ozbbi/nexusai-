@@ -3,6 +3,7 @@ import { Outfit, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -30,11 +31,11 @@ export const metadata: Metadata = {
   },
   description:
     "Discover, buy, and sell AI models, agents, and tools. Built by creators, for everyone.",
-  keywords: ["AI", "marketplace", "machine learning", "AI tools", "AI models", "AI agents"],
+  keywords: ["AI", "marketplace", "machine learning", "AI tools", "AI models", "AI agents", "NexusAI"],
   openGraph: {
     title: "NexusAI — The Marketplace for AI",
     description: "Discover, buy, and sell AI models, agents, and tools.",
-    url: "https://nexusai.netlify.app",
+    url: "https://nexusai.vercel.app",
     siteName: "NexusAI",
     type: "website",
   },
@@ -56,20 +57,22 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${outfit.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}>
       <body className="font-body antialiased bg-[#f8f9fc] text-[#0f172a]">
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              background: "#0f172a",
-              color: "#fff",
-              borderRadius: "12px",
-              fontSize: "14px",
-            },
-          }}
-        />
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: "#0f172a",
+                color: "#fff",
+                borderRadius: "12px",
+                fontSize: "14px",
+              },
+            }}
+          />
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

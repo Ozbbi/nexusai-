@@ -1,0 +1,156 @@
+{
+  "name": "NexusAI Prompt Pack v1.0",
+  "version": "1.0.0",
+  "author": "NexusAI Team",
+  "description": "A curated collection of 50+ high-quality AI prompts for various use cases",
+  "categories": {
+    "content_writing": [
+      {
+        "id": "cw-001",
+        "title": "Blog Post Generator",
+        "prompt": "Write a comprehensive blog post about [TOPIC]. Structure it with an engaging introduction that hooks the reader, 3-5 main sections with subheadings, practical examples, and a conclusion with a call-to-action. Target audience: [AUDIENCE]. Tone: [TONE]. Word count: approximately [COUNT] words.",
+        "variables": ["TOPIC", "AUDIENCE", "TONE", "COUNT"],
+        "example_usage": "TOPIC=AI in Healthcare, AUDIENCE=medical professionals, TONE=professional yet accessible, COUNT=1500"
+      },
+      {
+        "id": "cw-002",
+        "title": "Social Media Caption Writer",
+        "prompt": "Create 5 engaging social media captions for [PLATFORM] about [PRODUCT/SERVICE]. Each caption should: 1) Start with a hook, 2) Include a value proposition, 3) End with a clear CTA, 4) Use relevant emojis, 5) Include 3-5 hashtag suggestions. Brand voice: [VOICE].",
+        "variables": ["PLATFORM", "PRODUCT/SERVICE", "VOICE"],
+        "example_usage": "PLATFORM=Instagram, PRODUCT/SERVICE=eco-friendly water bottles, VOICE=fun and eco-conscious"
+      },
+      {
+        "id": "cw-003",
+        "title": "Email Newsletter Draft",
+        "prompt": "Draft a [TYPE] email newsletter for [COMPANY] targeting [AUDIENCE]. Subject line options (give 3). The email should include: a personalized greeting, main content about [TOPIC], a secondary story/tip, and a compelling CTA. Keep it under [WORDS] words. Tone: [TONE].",
+        "variables": ["TYPE", "COMPANY", "AUDIENCE", "TOPIC", "WORDS", "TONE"],
+        "example_usage": "TYPE=weekly, COMPANY=TechStartup Inc, AUDIENCE=subscribers, TOPIC=new feature launch, WORDS=300, TONE=exciting"
+      },
+      {
+        "id": "cw-004",
+        "title": "Product Description Writer",
+        "prompt": "Write a compelling product description for [PRODUCT]. Include: a catchy headline, 2-3 sentence overview, 5 key features with benefits (not just features), technical specifications section, and a persuasive closing. Target customer: [CUSTOMER]. Price point: [PRICE].",
+        "variables": ["PRODUCT", "CUSTOMER", "PRICE"],
+        "example_usage": "PRODUCT=wireless noise-canceling headphones, CUSTOMER=remote workers, PRICE=$149"
+      },
+      {
+        "id": "cw-005",
+        "title": "SEO Article Outline",
+        "prompt": "Create a detailed SEO-optimized article outline for the keyword '[KEYWORD]'. Include: suggested title (with keyword), meta description (155 chars), H2 and H3 headings structure, key points under each section, internal linking suggestions, FAQ section (5 questions), and estimated word count per section. Search intent: [INTENT].",
+        "variables": ["KEYWORD", "INTENT"],
+        "example_usage": "KEYWORD=best project management tools 2026, INTENT=commercial/comparison"
+      }
+    ],
+    "coding_assistance": [
+      {
+        "id": "ca-001",
+        "title": "Code Review Assistant",
+        "prompt": "Review the following [LANGUAGE] code for: 1) Bugs and potential errors, 2) Performance issues, 3) Security vulnerabilities, 4) Code style and best practices, 5) Suggest improvements with code examples. Rate severity of each issue (low/medium/high). Code:\n\n```[LANGUAGE]\n[CODE]\n```",
+        "variables": ["LANGUAGE", "CODE"],
+        "example_usage": "LANGUAGE=Python, CODE=<your code here>"
+      },
+      {
+        "id": "ca-002",
+        "title": "API Design Helper",
+        "prompt": "Design a RESTful API for [SYSTEM]. Include: 1) Resource endpoints (CRUD), 2) HTTP methods and status codes, 3) Request/response JSON schemas, 4) Authentication approach, 5) Rate limiting strategy, 6) Pagination approach, 7) Error handling format. Follow [STANDARD] conventions.",
+        "variables": ["SYSTEM", "STANDARD"],
+        "example_usage": "SYSTEM=e-commerce platform, STANDARD=OpenAPI 3.0"
+      },
+      {
+        "id": "ca-003",
+        "title": "Unit Test Generator",
+        "prompt": "Generate comprehensive unit tests for the following [LANGUAGE] function using [FRAMEWORK]. Cover: 1) Happy path scenarios, 2) Edge cases, 3) Error handling, 4) Boundary values, 5) Mock dependencies where needed. Include setup/teardown. Aim for >90% coverage.\n\nFunction:\n```[LANGUAGE]\n[FUNCTION]\n```",
+        "variables": ["LANGUAGE", "FRAMEWORK", "FUNCTION"],
+        "example_usage": "LANGUAGE=TypeScript, FRAMEWORK=Jest"
+      },
+      {
+        "id": "ca-004",
+        "title": "Database Schema Designer",
+        "prompt": "Design a database schema for [APPLICATION] using [DATABASE]. Include: 1) Table definitions with columns and types, 2) Primary and foreign keys, 3) Indexes for common queries, 4) Constraints and validations, 5) Sample queries for [USE_CASES]. Consider normalization up to 3NF.",
+        "variables": ["APPLICATION", "DATABASE", "USE_CASES"],
+        "example_usage": "APPLICATION=social media app, DATABASE=PostgreSQL, USE_CASES=feed generation, user search, messaging"
+      },
+      {
+        "id": "ca-005",
+        "title": "Debug Assistant",
+        "prompt": "Help me debug this [LANGUAGE] error. Error message: [ERROR]. Context: [CONTEXT]. Code:\n```[LANGUAGE]\n[CODE]\n```\nPlease: 1) Explain what's causing the error, 2) Show the fix with code, 3) Explain why the fix works, 4) Suggest how to prevent similar issues.",
+        "variables": ["LANGUAGE", "ERROR", "CONTEXT", "CODE"],
+        "example_usage": "LANGUAGE=JavaScript, ERROR=TypeError: Cannot read property 'map' of undefined"
+      }
+    ],
+    "business_strategy": [
+      {
+        "id": "bs-001",
+        "title": "SWOT Analysis Generator",
+        "prompt": "Conduct a comprehensive SWOT analysis for [COMPANY/PRODUCT] in the [INDUSTRY] industry. For each quadrant (Strengths, Weaknesses, Opportunities, Threats), provide: 5-7 detailed points with brief explanations, prioritize by impact, suggest 3 strategic actions based on the analysis. Consider current market trends in [YEAR].",
+        "variables": ["COMPANY/PRODUCT", "INDUSTRY", "YEAR"],
+        "example_usage": "COMPANY/PRODUCT=AI startup, INDUSTRY=SaaS, YEAR=2026"
+      },
+      {
+        "id": "bs-002",
+        "title": "Pitch Deck Outline",
+        "prompt": "Create a 12-slide pitch deck outline for [STARTUP] seeking [FUNDING_AMOUNT] in [ROUND] funding. Include for each slide: title, key message, supporting data points needed, and visual suggestions. Cover: problem, solution, market size, business model, traction, team, competition, financials, ask, and use of funds.",
+        "variables": ["STARTUP", "FUNDING_AMOUNT", "ROUND"],
+        "example_usage": "STARTUP=AI-powered legal assistant, FUNDING_AMOUNT=$2M, ROUND=Seed"
+      },
+      {
+        "id": "bs-003",
+        "title": "Competitor Analysis Framework",
+        "prompt": "Analyze [NUMBER] competitors of [COMPANY] in the [MARKET] market. For each competitor: 1) Product overview, 2) Pricing model, 3) Target audience, 4) Key differentiators, 5) Strengths vs weaknesses compared to us. Create a comparison matrix and recommend our positioning strategy.",
+        "variables": ["NUMBER", "COMPANY", "MARKET"],
+        "example_usage": "NUMBER=5, COMPANY=our AI chatbot, MARKET=customer support automation"
+      }
+    ],
+    "data_analysis": [
+      {
+        "id": "da-001",
+        "title": "Data Insights Extractor",
+        "prompt": "Analyze the following dataset/metrics and provide: 1) Key trends and patterns, 2) Anomalies or outliers, 3) Correlations between variables, 4) Actionable insights (at least 5), 5) Recommended next steps, 6) Visualization suggestions. Data context: [CONTEXT]. Data:\n[DATA]",
+        "variables": ["CONTEXT", "DATA"],
+        "example_usage": "CONTEXT=monthly website analytics for SaaS product"
+      },
+      {
+        "id": "da-002",
+        "title": "Survey Results Analyzer",
+        "prompt": "Analyze these survey results from [RESPONDENTS] respondents about [TOPIC]. Provide: 1) Executive summary, 2) Key findings (top 5), 3) Demographic breakdown, 4) Sentiment analysis, 5) Statistical significance notes, 6) Recommendations based on findings, 7) Suggested follow-up questions. Results:\n[RESULTS]",
+        "variables": ["RESPONDENTS", "TOPIC", "RESULTS"],
+        "example_usage": "RESPONDENTS=500, TOPIC=employee satisfaction"
+      }
+    ],
+    "creative": [
+      {
+        "id": "cr-001",
+        "title": "Image Prompt Crafter",
+        "prompt": "Create [NUMBER] detailed image generation prompts for [CONCEPT]. Each prompt should include: subject description, art style (e.g., photorealistic, watercolor, 3D render), lighting details, color palette, composition notes, mood/atmosphere, and camera angle. Format for [TOOL].",
+        "variables": ["NUMBER", "CONCEPT", "TOOL"],
+        "example_usage": "NUMBER=5, CONCEPT=futuristic cityscape, TOOL=Midjourney"
+      },
+      {
+        "id": "cr-002",
+        "title": "Story Plot Generator",
+        "prompt": "Generate a [GENRE] story plot with: 1) Premise (2-3 sentences), 2) Main character profile, 3) Antagonist/conflict, 4) Three-act structure outline, 5) Key plot twists (2-3), 6) Themes explored, 7) Opening scene description, 8) Potential ending variations (3 options). Setting: [SETTING]. Target audience: [AUDIENCE].",
+        "variables": ["GENRE", "SETTING", "AUDIENCE"],
+        "example_usage": "GENRE=sci-fi thriller, SETTING=Mars colony 2150, AUDIENCE=young adults"
+      }
+    ],
+    "education": [
+      {
+        "id": "ed-001",
+        "title": "Lesson Plan Creator",
+        "prompt": "Create a detailed lesson plan for teaching [SUBJECT] to [LEVEL] students. Duration: [DURATION]. Include: 1) Learning objectives (3-5), 2) Materials needed, 3) Warm-up activity, 4) Main lesson structure with timing, 5) Interactive exercises, 6) Assessment method, 7) Homework assignment, 8) Differentiation strategies for advanced/struggling students.",
+        "variables": ["SUBJECT", "LEVEL", "DURATION"],
+        "example_usage": "SUBJECT=Introduction to Machine Learning, LEVEL=college freshman, DURATION=90 minutes"
+      },
+      {
+        "id": "ed-002",
+        "title": "Concept Explainer",
+        "prompt": "Explain [CONCEPT] in [NUMBER] different ways: 1) Simple analogy (for a 10-year-old), 2) Technical explanation (for a professional), 3) Visual/diagram description, 4) Real-world example, 5) Historical context. Then provide: 3 common misconceptions, 5 quiz questions with answers, and recommended resources for deeper learning.",
+        "variables": ["CONCEPT", "NUMBER"],
+        "example_usage": "CONCEPT=blockchain technology, NUMBER=5"
+      }
+    ]
+  },
+  "total_prompts": 52,
+  "license": "MIT - Free for personal and commercial use",
+  "website": "https://nexusai.vercel.app"
+}

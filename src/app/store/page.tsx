@@ -1,19 +1,28 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
-import { mockProducts, categories } from "@/lib/mock-data";
+import { categories } from "@/lib/mock-data";
+import { getProducts } from "@/lib/supabase";
+import { Product } from "@/types";
 
 export default function StorePage() {
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("popular");
   const [freeOnly, setFreeOnly] = useState(false);
 
+  useEffect(() => {
+    getProducts()
+      .then((data) => setProducts(data || []))
+      .catch(() => setProducts([]));
+  }, []);
+
   const filtered = useMemo(() => {
-    let results = [...mockProducts];
+    let results = [...products];
 
     if (search) {
       const q = search.toLowerCase();
@@ -51,7 +60,7 @@ export default function StorePage() {
     }
 
     return results;
-  }, [search, category, sort, freeOnly]);
+  }, [search, category, sort, freeOnly, products]);
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
@@ -136,16 +145,6 @@ export default function StorePage() {
               </select>
             </div>
 
-            <button
-              onClick={() => setFreeOnly(!freeOnly)}
-              className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                freeOnly
-                  ? "bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm"
-                  : "bg-white text-[#475569] border border-gray-200 hover:border-emerald-300 hover:text-emerald-600"
-              }`}
-            >
-              Free Only
-            </button>
           </div>
 
           <span className="text-sm text-[#94a3b8] font-medium">

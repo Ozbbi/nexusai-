@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Brain, Eye, EyeOff, ArrowRight, Star, Shield, Zap } from "lucide-react";
 import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -17,10 +19,14 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    const { error } = await signIn(email, password);
+    if (error) {
+      toast.error(error.message || "Invalid credentials");
+      setLoading(false);
+    } else {
       toast.success("Welcome back!");
       router.push("/dashboard");
-    }, 1000);
+    }
   };
 
   return (
